@@ -45,10 +45,7 @@ playback-pace/
 │
 ├── manifest.json        # Extension config (Manifest V3)
 ├── content.js           # Core logic injected into YouTube
-├── style.css            # Minimal styling for display
-│
-└── icons/
-    └── icon.png         # Extension icon
+├── icon.png         # Extension icon
 ```
 
 ---
