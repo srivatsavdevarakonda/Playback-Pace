@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Playback Pace",
-  "version": "3.0",
-  "description": "A robust calculator for the finish time of any YouTube video, supporting multi-day durations and all page loads.",
+  "version": "1.0",
+  "description": "The definitive, universal calculator for the finish time of any YouTube video or Short.",
   "icons": {
     "128": "icon.png"
   },

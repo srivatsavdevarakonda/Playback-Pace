@@ -1,6 +1,5 @@
 // --- CORE HELPER FUNCTIONS ---
 
-// Parses time strings like "223:45:10" into total seconds.
 const parseTimeToSeconds = (timeStr) => {
     if (!timeStr || !timeStr.includes(':')) return 0;
     const parts = timeStr.split(':').map(Number);
@@ -10,27 +9,19 @@ const parseTimeToSeconds = (timeStr) => {
     return isNaN(seconds) ? 0 : seconds;
 };
 
-// Formats seconds into a readable string, correctly handling days for very long videos.
 const formatSecondsToTime = (totalSeconds) => {
     if (isNaN(totalSeconds) || totalSeconds < 0) return "00:00";
-
     const days = Math.floor(totalSeconds / 86400);
     const remainingSecondsAfterDays = totalSeconds % 86400;
     const hours = Math.floor(remainingSecondsAfterDays / 3600);
     const remainingSecondsAfterHours = remainingSecondsAfterDays % 3600;
     const minutes = Math.floor(remainingSecondsAfterHours / 60);
     const seconds = Math.floor(remainingSecondsAfterHours % 60);
-
     const paddedHours = String(hours).padStart(2, '0');
     const paddedMinutes = String(minutes).padStart(2, '0');
     const paddedSeconds = String(seconds).padStart(2, '0');
-
-    if (days > 0) {
-        return `${days} day${days > 1 ? 's' : ''}, ${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
-    }
-    if (totalSeconds >= 3600) {
-         return `${hours}:${paddedMinutes}:${paddedSeconds}`;
-    }
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''}, ${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+    if (totalSeconds >= 3600) return `${hours}:${paddedMinutes}:${paddedSeconds}`;
     return `${minutes}:${paddedSeconds}`;
 };
 
@@ -45,7 +36,6 @@ const initStandardVideoPlayer = () => {
     const updateDisplay = () => {
         const originalTotalSeconds = parseTimeToSeconds(durationElement.textContent);
         if (originalTotalSeconds === 0) return;
-
         const currentSpeed = videoPlayer.playbackRate;
         const newTotalSeconds = originalTotalSeconds / currentSpeed;
         const savedSeconds = originalTotalSeconds - newTotalSeconds;
@@ -57,7 +47,6 @@ const initStandardVideoPlayer = () => {
             paceElement.style.cssText = 'color: #f1f1f1 !important; font-weight: bold !important; margin-left: 8px !important;';
             durationElement.parentElement.appendChild(paceElement);
         }
-
         paceElement.textContent = currentSpeed === 1 ? '' : `(${formatSecondsToTime(newTotalSeconds)} | Saved: ${formatSecondsToTime(savedSeconds)})`;
     };
 
@@ -79,7 +68,6 @@ const initShortsPlayer = () => {
     let paceElement;
     const createPaceElement = () => {
         if (document.getElementById('playback-pace-shorts-display')) return;
-        
         paceElement = document.createElement('div');
         paceElement.id = 'playback-pace-shorts-display';
         paceElement.style.cssText = `
@@ -98,7 +86,6 @@ const initShortsPlayer = () => {
 
         const originalTotalSeconds = videoPlayer.duration;
         if (isNaN(originalTotalSeconds) || originalTotalSeconds === 0) return;
-        
         const currentSpeed = videoPlayer.playbackRate;
         const newTotalSeconds = originalTotalSeconds / currentSpeed;
         const savedSeconds = originalTotalSeconds - newTotalSeconds;
@@ -116,7 +103,7 @@ const initShortsPlayer = () => {
     updateShortsDisplay();
 };
 
-// --- INITIALIZATION OBSERVER ---
+// --- INITIALIZATION OBSERVER (THE CORE OF THE SOLUTION) ---
 const initialize = () => {
     if (window.location.href.includes('/shorts/')) {
         initShortsPlayer();
